@@ -18,7 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} tech-pattern`}>
+        <div className="circuit-overlay" />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

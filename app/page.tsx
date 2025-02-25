@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import Link from "next/link";
 import {
   Download,
   Github,
@@ -15,13 +16,29 @@ import {
   ExternalLink,
   Phone,
   Globe,
-  BookOpen
+  BookOpen,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 export default function Home() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Add form submission logic here
+    console.log(formData);
+  };
+
   const experiences = [
     {
       company: "Accenture",
@@ -99,24 +116,30 @@ export default function Home() {
       description: "Cross-platform video sharing solution with real-time capabilities",
       achievements: [
         "Developed SaaS platform with AWS, CloudFront, Next.js, Electron",
-        "Maintained 99% uptime and reduced latency by 20%",
-        "Implemented real-time features using Socket.io"
+        "Maintained 99% uptime and reduced latency by 20%"
       ],
       tech: ["AWS", "Next.js", "Electron", "Socket.io", "Express"],
       github: "https://github.com/rudranshchouksey/video-sharing-app",
-      demo: "https://video-sharing-app.demo.com"
+      demo: "https://video-sharing-app.demo.com",
+      images: [
+        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&h=400&fit=crop"
+      ]
     },
     {
       title: "Food Delivery App",
       description: "Full-stack food delivery platform with real-time tracking",
       achievements: [
         "Built system supporting 500+ daily users",
-        "Reduced order processing time by 30%",
-        "Improved customer satisfaction by 15%"
+        "Reduced order processing time by 30%"
       ],
       tech: ["React.js", "Node.js", "MongoDB", "Socket.io"],
       github: "https://github.com/rudranshchouksey/food-delivery",
-      demo: "https://food-delivery.demo.com"
+      demo: "https://food-delivery.demo.com",
+      images: [
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1565299585577-e4e457bf63b7?w=800&h=400&fit=crop"
+      ]
     }
   ];
 
@@ -148,9 +171,10 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero Section */}
+      {/* Hero Section with Tech Background */}
       <section className="relative h-screen flex items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/80 z-0" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80')] bg-cover bg-center bg-no-repeat opacity-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-background/95" />
         <div className="container px-4 mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -194,11 +218,15 @@ export default function Home() {
               </span>
             </div>
             <div className="flex gap-4 justify-center mb-12">
-              <Button variant="default" size="lg">
-                <Download className="mr-2 h-4 w-4" /> Download Resume
+              <Button variant="default" size="lg" asChild>
+                <Link href="/projects" className="flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" /> View Projects
+                </Link>
               </Button>
-              <Button variant="outline" size="lg">
-                <Mail className="mr-2 h-4 w-4" /> Contact Me
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/contact" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" /> Contact Me
+                </Link>
               </Button>
             </div>
             <div className="flex gap-4 justify-center">
@@ -299,16 +327,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section className="py-20 bg-muted/50">
-        <div className="container px-4 mx-auto">
+      {/* Projects Section with Image Gallery */}
+      <section className="py-20 relative">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80')] bg-cover bg-fixed opacity-5" />
+        <div className="container px-4 mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold mb-12 text-center">Projects</h2>
+            <h2 className="text-3xl font-bold mb-12 text-center">Featured Projects</h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
               {projects.map((project, index) => (
                 <motion.div
@@ -318,48 +347,50 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="h-full">
+                  <Card className="h-full overflow-hidden group">
+                    <div className="relative h-48 overflow-hidden">
+                      <div className="flex transition-transform duration-500 group-hover:translate-x-[-50%]">
+                        {project.images.map((image, i) => (
+                          <img
+                            key={i}
+                            src={image}
+                            alt={`${project.title} screenshot ${i + 1}`}
+                            className="w-full h-48 object-cover flex-shrink-0"
+                          />
+                        ))}
+                      </div>
+                    </div>
                     <div className="p-6">
                       <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
                       <p className="text-muted-foreground mb-4">{project.description}</p>
-                      <ul className="space-y-2 mb-4">
-                        {project.achievements.map((achievement, i) => (
-                          <li key={i} className="text-muted-foreground">
-                            • {achievement}
-                          </li>
-                        ))}
-                      </ul>
                       <div className="flex flex-wrap gap-2 mb-6">
                         {project.tech.map((tech, i) => (
-                          <Badge key={i} variant="outline">
-                            {tech}
-                          </Badge>
+                          <Badge key={i} variant="outline">{tech}</Badge>
                         ))}
                       </div>
                       <div className="flex gap-4">
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <Github className="h-4 w-4" />
-                          <span>Code</span>
-                        </a>
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                          <span>Live Demo</span>
-                        </a>
+                        <Button variant="outline" size="sm" asChild>
+                          <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                            <Github className="h-4 w-4" /> Code
+                          </a>
+                        </Button>
+                        <Button size="sm" asChild>
+                          <a href={project.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                            <ExternalLink className="h-4 w-4" /> Demo
+                          </a>
+                        </Button>
                       </div>
                     </div>
                   </Card>
                 </motion.div>
               ))}
+            </div>
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/projects" className="flex items-center gap-2">
+                  View All Projects <ExternalLink className="h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -420,52 +451,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-20 bg-muted/50">
-        <div className="container px-4 mx-auto">
+      {/* Contact Section with Form */}
+      <section className="py-20 relative">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683311-eeb2f49a8532?w=1920&q=80')] bg-cover bg-fixed opacity-5" />
+        <div className="container px-4 mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="max-w-xl mx-auto text-center"
+            className="max-w-xl mx-auto"
           >
-            <h2 className="text-3xl font-bold mb-8">Get in Touch</h2>
+            <h2 className="text-3xl font-bold mb-8 text-center">Get in Touch</h2>
             <Card className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-center gap-2">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <Input
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="email"
+                    placeholder="Your Email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+                <div>
+                  <Textarea
+                    placeholder="Your Message"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    required
+                    className="min-h-[150px] bg-background/50"
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  <Send className="h-4 w-4 mr-2" /> Send Message
+                </Button>
+              </form>
+              <div className="mt-8 space-y-4">
+                <div className="flex items-center gap-2">
                   <Phone className="h-5 w-5 text-muted-foreground" />
-                  <a href="tel:+917999189654" className="text-lg hover:text-primary transition-colors">
+                  <a href="tel:+917999189654" className="hover:text-primary transition-colors">
                     +91 7999189654
                   </a>
                 </div>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center gap-2">
                   <Mail className="h-5 w-5 text-muted-foreground" />
-                  <a href="mailto:rudranshchouksey@gmail.com" className="text-lg hover:text-primary transition-colors">
+                  <a href="mailto:rudranshchouksey@gmail.com" className="hover:text-primary transition-colors">
                     rudranshchouksey@gmail.com
                   </a>
                 </div>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-muted-foreground" />
-                  <span className="text-lg">Indore, Madhya Pradesh, India</span>
-                </div>
-                <div className="flex justify-center gap-4 pt-4">
-                  <a
-                    href="https://github.com/rudranshchouksey"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Github className="h-6 w-6" />
-                  </a>
-                  <a
-                    href="https://linkedin.com/in/rudransh-chouksey-586489147"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Linkedin className="h-6 w-6" />
-                  </a>
+                  <span>Indore, Madhya Pradesh, India</span>
                 </div>
               </div>
             </Card>

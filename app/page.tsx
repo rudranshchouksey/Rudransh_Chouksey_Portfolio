@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import RudranshImg from "@/components/rudransh-chouksey.jpg"
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
@@ -182,9 +184,11 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&q=80"
-              alt="Rudransh Chouksey"
+            <Image 
+              src={RudranshImg} 
+              alt="Rudransh Chouksey" 
+              width={128} 
+              height={128} 
               className="w-32 h-32 rounded-full mx-auto mb-8 border-4 border-primary/20"
             />
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
